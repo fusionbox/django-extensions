@@ -69,6 +69,9 @@ class Command(BaseCommand):
                             help='Do not run in multithreaded mode.')
         parser.add_argument('--threaded', action='store_true', dest='threaded',
                             help='Run in multithreaded mode.')
+        parser.add_argument('--processes', action='store', type=int, default=1,
+                            help='Run in forked mode if more than if processes is greater than one. '
+                                 'This can not be used with --threaded.')
         parser.add_argument('--output', dest='output_file', default=None,
                             help='Specifies an output file to send a copy of all messages (not flushed immediately).')
         parser.add_argument('--print-sql', action='store_true', default=False,
@@ -243,6 +246,7 @@ class Command(BaseCommand):
                 return environ
 
         threaded = options['threaded']
+        processes = options['processes']
         use_reloader = options['use_reloader']
         open_browser = options['open_browser']
         quit_command = (sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
@@ -341,6 +345,7 @@ class Command(BaseCommand):
             reloader_interval=reloader_interval,
             reloader_type=reloader_type,
             threaded=threaded,
+            processes=processes,
             request_handler=WSGIRequestHandler,
             ssl_context=ssl_context,
         )
